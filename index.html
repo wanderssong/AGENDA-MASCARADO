@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Agenda Estúdio Mascarado</title>
+    <style>
+        :root {
+            --bg: #0b0b0f;
+            /* fundo escuro elegante */
+            --card: #13131a;
+            /* cartões */
+            --accent: #8b5cf6;
+            /* roxo vibrante */
+            --accent-2: #22d3ee;
+            /* ciano para detalhes */
+            --text: #f5f7fb;
+            /* texto principal */
+            --muted: #a9afc3;
+            /* texto secundário */
+            --ok: #22c55e;
+            /* sucesso */
+            --warn: #f59e0b;
+            /* aviso */
+            --danger: #ef4444;
+            /* perigo */
+            --radius: 18px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Ubuntu, "Helvetica Neue", Arial, sans-serif
+        }
+
+        .wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 18px
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            margin: 0;
+            letter-spacing: .3px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .mask {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: grid;
+            place-items: center;
+            box-shadow: var(--shadow)
+        }
+
+        .mask svg {
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35))
+        }
+
+        .btn {
+            appearance: none;
+            border: 0;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #0b0b0f;
+            font-weight: 700;
+            padding: 12px 14px;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .btn:active {
+            transform: translateY(1px)
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 12px 0 16px
+        }
+
+        .chip {
+            background: #1a1b23;
+            border: 1px solid #262736;
+            color: var(--muted);
+            padding: 8px 10px;
+            border-radius: 999px;
+            font-size: .85rem
+        }
+
+        .calendar {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 12px
+        }
+
+        .cal-head {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            color: var(--muted);
+            font-size: .8rem;
+            margin-bottom: 8px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px
+        }
+
+        .day {
+            aspect-ratio: 1 / 1.1;
+            background: #0f1016;
+            border: 1px solid #20222f;
+            border-radius: 12px;
+            position: relative;
+            padding: 6px;
+            display: flex;
+            flex-direction: column
+        }
+
+        .day .num {
+            font-size: .9rem;
+            color: var(--muted)
+        }
+
+        .day.today {
+            outline: 2px solid var(--accent-2)
+        }
+
+        .day .dots {
+            margin-top: auto;
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent)
+        }
+
+        .dot.warn {
+            background: var(--warn)
+        }
+
+        .dot.ok {
+            background: var(--ok)
+        }
+
+        .events {
+            margin-top: 14px;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 12px
+        }
+
+        .events h3 {
+            margin: 2px 0 8px;
+            font-size: 1rem
+        }
+
+        .event {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 12px;
+            background: #0f1016;
+            border: 1px solid #20222f;
+            margin-bottom: 8px
+        }
+
+        .event:last-child {
+            margin-bottom: 0
+        }
+
+        .time {
+            font-weight: 800;
+            color: #e5e7eb;
+            min-width: 64px
+        }
+
+        .badge {
+            font-size: .72rem;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid #2a2c3a;
+            color: var(--muted)
+        }
+
+        .badge.ok {
+            border-color: #245f3a;
+            color: #7df7a1
+        }
+
+        .badge.warn {
+            border-color: #5a4a21;
+            color: #ffd98a
+        }
+
+        .title {
+            font-weight: 700
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: .85rem
+        }
+
+        .event:hover {
+            outline: 1px solid #2a2c3a
+        }
+
+        .tap {
+            margin-left: auto;
+            font-size: .75rem;
+            color: var(--accent-2)
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 14px
+        }
+
+        .card {
+            background: var(--card);
+            padding: 12px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow)
+        }
+
+        .card small {
+            color: var(--muted)
+        }
+
+        .card b {
+            display: block;
+            font-size: 1.2rem;
+            margin-top: 4px
+        }
+
+        /* Modal */
+        dialog {
+            border: none;
+            padding: 0;
+            border-radius: 20px;
+            max-width: 520px;
+            width: 92vw;
+            background: #0f1016;
+            color: var(--text);
+            box-shadow: var(--shadow)
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid #232536;
+            background: #12131a;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px
+        }
+
+        .modal-body {
+            padding: 14px 16px;
+            display: grid;
+            gap: 10px
+        }
+
+        .x {
+            background: #1a1c25;
+            border: 1px solid #292b38;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            color: #c7cbe2;
+            font-weight: 800;
+            display: grid;
+            place-items: center
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .label {
+            width: 120px;
+            color: var(--muted)
+        }
+
+        .value {
+            font-weight: 700
+        }
+
+        /* Fallback Month Dialog */
+        #monthDlg .modal-body {
+            gap: 12px
+        }
+
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px
+        }
+
+        .month-btn {
+            background: #171822;
+            border: 1px solid #2a2c3a;
+            border-radius: 12px;
+            padding: 10px;
+            font-weight: 700;
+            color: #e6e8f0
+        }
+
+        .month-btn:active {
+            transform: translateY(1px)
+        }
+
+        .dlg-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        /* Mobile tweaks */
+        @media (max-width:480px) {
+            .label {
+                width: 96px
+            }
+
+            .time {
+                min-width: 58px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="brand">
+                <div class="mask" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9c3.5-2.5 7-2.5 9 0 2-2.5 5.5-2.5 9 0v3c0 4.97-4.03 9-9 9s-9-4.03-9-9V9Z"
+                            stroke="white" stroke-width="1.5" />
+                        <path d="M7 12h3" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+                        <path d="M14 12h3" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <h1>Agenda Estúdio Mascarado</h1>
+            </div>
+            <button id="pickMonthBtn" class="btn" type="button" aria-label="Escolher mês">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M7 3v4M17 3v4M4 11h16M5 7h14a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V9a2 2 0 0 1 2-2Z"
+                        stroke="#0b0b0f" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                ESCOLHER MÊS
+            </button>
+            <!-- Input nativo fica invisível, mas ainda acessível por JS -->
+            <input id="monthInput" type="month" aria-hidden="true"
+                style="position:absolute;opacity:0;width:0;height:0;border:0;padding:0;" />
+        </header>
+
+        <div class="toolbar">
+            <span id="currentMonthLabel" class="chip" data-testid="month-label">Mês atual</span>
+            <span id="countChip" class="chip" data-testid="count-chip">0 eventos</span>
+        </div>
+
+        <section class="calendar" aria-label="Calendário do mês">
+            <div class="cal-head">
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+                <div>Dom</div>
+            </div>
+            <div id="calGrid" class="grid" data-testid="cal-grid"></div>
+        </section>
+
+        <section class="events" aria-label="Lista de eventos">
+            <h3>Eventos do mês</h3>
+            <div id="eventList" data-testid="event-list"></div>
+        </section>
+
+        <section class="stats" aria-label="Resumo">
+            <div class="card"><small>Total no mês</small><b id="statTotal">0</b></div>
+            <div class="card"><small>Próximos</small><b id="statUpcoming">0</b></div>
+            <div class="card"><small>Concluídos</small><b id="statDone">0</b></div>
+        </section>
+    </div>
+
+    <!-- Modal principal de evento -->
+    <dialog id="eventModal">
+        <div class="modal-head">
+            <strong id="mTitle">Detalhes do evento</strong>
+            <button class="x" id="closeModal" aria-label="Fechar">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- VIEW: detalhes de um único evento -->
+            <div id="detailView">
+                <div class="row">
+                    <div class="label">Evento</div>
+                    <div class="value" id="mEvent">—</div>
+                </div>
+                <div class="row">
+                    <div class="label">Contratante</div>
+                    <div class="value" id="mClient">—</div>
+                </div>
+                <div class="row">
+                    <div class="label">Início</div>
+                    <div class="value" id="mStart">—</div>
+                </div>
+                <div class="row">
+                    <div class="label">Duração</div>
+                    <div class="value" id="mDur">—</div>
+                </div>
+                <div class="row">
+                    <div class="label">Local</div>
+                    <div class="value" id="mPlace">—</div>
+                </div>
+            </div>
+            <!-- VIEW: lista para escolher entre múltiplos eventos -->
+            <div id="pickListView" hidden></div>
+        </div>
+    </dialog>
+
+    <!-- Fallback: seletor de mês custom quando showPicker/click não funcionam -->
+    <dialog id="monthDlg">
+        <div class="modal-head">
+            <button class="x" id="closeMonthDlg" aria-label="Fechar">×</button>
+            <strong id="dlgTitle" style="margin-left:auto;margin-right:auto">Escolher mês</strong>
+            <span style="width:36px"></span>
+        </div>
+        <div class="modal-body">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                <button class="month-btn" id="prevYear" aria-label="Ano anterior">« Ano</button>
+                <div class="chip" id="yearLabel">2025</div>
+                <button class="month-btn" id="nextYear" aria-label="Próximo ano">Ano »</button>
+            </div>
+            <div class="month-grid" id="monthGrid"></div>
+            <div class="dlg-actions">
+                <button class="btn" id="todayBtn" type="button">Hoje</button>
+                <button class="btn" id="cancelMonthBtn" type="button">Cancelar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        // ===== Utilidades de data =====
+        const tz = 'America/Cuiaba';
+        const fmtDate = (date) => new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeZone: tz }).format(date);
+        const fmtTime = (date) => new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: tz }).format(date);
+        function addMinutes(date, mins) { const d = new Date(date); d.setMinutes(d.getMinutes() + mins); return d; }
+
+        // ===== Base de eventos (edite/adicione aqui) =====
+        const makeId = () => (self.crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        // Duração em minutos
+        const events = [
+            { title: 'Casamento', client: 'Cibele Estrela', start: '2025-10-11T19:30:00-04:00', durationMin: 150, place: 'Kilograma' },
+            { title: 'Baile dos Médicos', client: 'Cibele Estrela', start: '2025-10-18T20:30:00-04:00', durationMin: 150, place: 'Local a definir' },
+            { title: 'Ensaio Infantil', client: 'Denise Sobral', start: '2025-10-19T15:00:00-04:00', durationMin: 60, place: 'Aquarela Brasil' },
+            { title: 'Aniversário de 7 anos', client: 'Cibele Estrela', start: '2025-10-25T17:00:00-04:00', durationMin: 120, place: 'Aquarela dos Poemas' },
+            { title: 'Aniversário Infantil', client: 'Leticia Thaisa', start: '2025-10-25T19:30:00-04:00', durationMin: 60, place: 'Biolchi Eventos' },
+            { title: 'A obter informações', client: 'Cibele Estrela', start: '2025-11-06T19:30:00-04:00', durationMin: 150, place: 'Local a definir' },
+            { title: 'Aniversário Infantil', client: 'Fernanda Fernandes', start: '2025-11-08T16:30:00-04:00', durationMin: 120, place: 'Residência' },
+        ].map(e => ({ ...e, id: makeId() }));
+
+        // ===== Estado =====
+        const state = {
+            current: new Date(),
+            get month() { return this.current.getMonth(); },
+            get year() { return this.current.getFullYear(); }
+        };
+
+        // ===== Elementos =====
+        const calGrid = document.getElementById('calGrid');
+        const eventList = document.getElementById('eventList');
+        const currentMonthLabel = document.getElementById('currentMonthLabel');
+        const countChip = document.getElementById('countChip');
+        const monthInput = document.getElementById('monthInput');
+        const pickMonthBtn = document.getElementById('pickMonthBtn');
+
+        const statTotal = document.getElementById('statTotal');
+        const statUpcoming = document.getElementById('statUpcoming');
+        const statDone = document.getElementById('statDone');
+
+        const modal = document.getElementById('eventModal');
+        const mTitle = document.getElementById('mTitle');
+        const mEvent = document.getElementById('mEvent');
+        const mClient = document.getElementById('mClient');
+        const mStart = document.getElementById('mStart');
+        const mDur = document.getElementById('mDur');
+        const mPlace = document.getElementById('mPlace');
+        const closeModal = document.getElementById('closeModal');
+        const detailView = document.getElementById('detailView');
+        const pickListView = document.getElementById('pickListView');
+
+        // Fallback dialog refs
+        const monthDlg = document.getElementById('monthDlg');
+        const monthGrid = document.getElementById('monthGrid');
+        const yearLabel = document.getElementById('yearLabel');
+        const prevYear = document.getElementById('prevYear');
+        const nextYear = document.getElementById('nextYear');
+        const todayBtn = document.getElementById('todayBtn');
+        const cancelMonthBtn = document.getElementById('cancelMonthBtn');
+        const closeMonthDlg = document.getElementById('closeMonthDlg');
+
+        // ===== Helpers =====
+        function getMonthMatrix(year, month) {
+            // week starts Monday. Build days grid filling previous/next as blanks
+            const first = new Date(year, month, 1);
+            const last = new Date(year, month + 1, 0);
+            const startWeekday = (first.getDay() + 6) % 7; // 0=Mon
+            const days = last.getDate();
+
+            const cells = [];
+            for (let i = 0; i < startWeekday; i++) cells.push(null);
+            for (let d = 1; d <= days; d++) cells.push(new Date(year, month, d));
+            while (cells.length % 7 !== 0) cells.push(null);
+            return cells;
+        }
+
+        function eventsForMonth(year, month) {
+            return events.filter(e => {
+                const d = new Date(e.start);
+                return d.getFullYear() === year && d.getMonth() === month;
+            }).sort((a, b) => new Date(a.start) - new Date(b.start));
+        }
+
+        function eventsForDate(date) {
+            return events.filter(e => {
+                const d = new Date(e.start);
+                return d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth() && d.getDate() === date.getDate();
+            }).sort((a, b) => new Date(a.start) - new Date(b.start));
+        }
+
+        function formatDuration(mins) {
+            const h = Math.floor(mins / 60), m = mins % 60;
+            return m ? `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} h` : `${h} h`;
+        }
+
+        function showDetailView() {
+            pickListView.hidden = true;
+            detailView.hidden = false;
+        }
+        function showPickListView() {
+            detailView.hidden = true;
+            pickListView.hidden = false;
+        }
+
+        function openEventModal(ev) {
+            // garante que estamos no modo de detalhes e que os nós existem no DOM
+            showDetailView();
+            // título do modal mantém contexto do evento
+            mTitle.textContent = ev.title;
+            mEvent.textContent = ev.title;
+            mClient.textContent = ev.client;
+            const start = new Date(ev.start);
+            const end = addMinutes(start, ev.durationMin);
+            mStart.textContent = `${fmtDate(start)} — ${fmtTime(start)} (${fmtTime(end)})`;
+            mDur.textContent = formatDuration(ev.durationMin);
+            mPlace.textContent = ev.place || '—';
+            modal.showModal();
+        }
+
+        function openPickListModal(dateObj, list) {
+            // popula a lista mas mantém os elementos de detalhe intactos
+            pickListView.innerHTML = '';
+            const head = document.createElement('div');
+            head.style.cssText = 'color:var(--muted);font-size:.9rem;margin-bottom:6px';
+            head.textContent = `${list.length} eventos em ${fmtDate(dateObj)}`;
+            pickListView.appendChild(head);
+
+            list.forEach(ev => {
+                const btn = document.createElement('button');
+                btn.className = 'event';
+                btn.style.textAlign = 'left';
+                btn.innerHTML = `<span class="time">${fmtTime(new Date(ev.start))}</span>
+                       <div>
+                         <div class="title">${ev.title}</div>
+                         <div class="meta">${ev.client} • ${ev.place || '—'}</div>
+                       </div>`;
+                btn.addEventListener('click', () => { openEventModal(ev); });
+                pickListView.appendChild(btn);
+            });
+
+            mTitle.textContent = 'Escolha o evento';
+            showPickListView();
+            modal.showModal();
+        }
+
+        // ===== Calendário =====
+        function renderCalendar(year, month) {
+            const cells = getMonthMatrix(year, month);
+            const today = new Date();
+            calGrid.innerHTML = '';
+
+            cells.forEach(cell => {
+                const el = document.createElement('div');
+                el.className = 'day';
+                if (!cell) {
+                    el.style.visibility = 'hidden';
+                } else {
+                    const num = document.createElement('div');
+                    num.className = 'num';
+                    num.textContent = cell.getDate();
+                    el.appendChild(num);
+
+                    const list = eventsForDate(cell);
+                    const dots = document.createElement('div');
+                    dots.className = 'dots';
+                    list.forEach(ev => {
+                        const start = new Date(ev.start);
+                        const done = addMinutes(start, ev.durationMin) < today;
+                        const dot = document.createElement('span');
+                        dot.className = 'dot ' + (done ? 'ok' : (ev.place?.toLowerCase().includes('definir') ? 'warn' : ''));
+                        dot.title = `${fmtTime(start)} – ${ev.title}`;
+                        dots.appendChild(dot);
+                    });
+                    el.appendChild(dots);
+
+                    if (list.length) {
+                        el.style.cursor = 'pointer';
+                        el.addEventListener('click', () => {
+                            if (list.length === 1) {
+                                openEventModal(list[0]);
+                            } else {
+                                openPickListModal(cell, list);
+                            }
+                        });
+                    }
+
+                    if (cell.toDateString() === today.toDateString()) el.classList.add('today');
+                }
+                calGrid.appendChild(el);
+            });
+        }
+
+        function renderEventList(year, month) {
+            const list = eventsForMonth(year, month);
+            eventList.innerHTML = '';
+            if (!list.length) {
+                eventList.innerHTML = `<div class="meta">Sem eventos para este mês.</div>`;
+                return;
+            }
+
+            const now = new Date();
+            list.forEach(ev => {
+                const start = new Date(ev.start);
+                const done = addMinutes(start, ev.durationMin) < now;
+                const item = document.createElement('button');
+                item.className = 'event';
+                item.innerHTML = `
+        <span class="time">${start.getDate().toString().padStart(2, '0')}/${(start.getMonth() + 1).toString().padStart(2, '0')} ${fmtTime(start)}</span>
+        <div style="text-align:left">
+          <div class="title">${ev.title}</div>
+          <div class="meta">${ev.client} • ${ev.place || '—'}</div>
+        </div>
+        <span class="badge ${done ? 'ok' : (ev.place?.toLowerCase().includes('definir') ? 'warn' : '')}">${done ? 'Concluído' : 'Agendado'}</span>
+        <span class="tap">ver</span>
+      `;
+                item.addEventListener('click', () => openEventModal(ev));
+                eventList.appendChild(item);
+            });
+        }
+
+        function renderStats(year, month) {
+            const list = eventsForMonth(year, month);
+            const now = new Date();
+            const total = list.length;
+            const done = list.filter(ev => addMinutes(new Date(ev.start), ev.durationMin) < now).length;
+            const upcoming = total - done;
+
+            statTotal.textContent = total;
+            statUpcoming.textContent = upcoming;
+            statDone.textContent = done;
+
+            countChip.textContent = `${total} evento${total !== 1 ? 's' : ''}`;
+        }
+
+        function updateMonthLabel(date) {
+            const f = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' });
+            currentMonthLabel.textContent = f.format(date).replace(/^./, s => s.toUpperCase());
+        }
+
+        function syncMonthInput(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            monthInput.value = `${y}-${m}`;
+        }
+
+        function render() {
+            updateMonthLabel(state.current);
+            syncMonthInput(state.current);
+            renderCalendar(state.year, state.month);
+            renderEventList(state.year, state.month);
+            renderStats(state.year, state.month);
+        }
+
+        // ===== Seletor de mês seguro (corrige SecurityError do showPicker em sandbox) =====
+        function openMonthPickerSafely() {
+            try {
+                if (typeof monthInput.showPicker === 'function') {
+                    monthInput.showPicker();
+                    return;
+                }
+            } catch (err) {
+                console.debug('showPicker indisponível/negado, usando fallback:', err?.name || err);
+            }
+            try {
+                monthInput.click();
+                monthInput.focus({ preventScroll: true });
+                return;
+            } catch (err) {
+                console.debug('click em <input type="month"> bloqueado, abrindo seletor custom.');
+            }
+            openFallbackMonthDialog();
+        }
+
+        function openFallbackMonthDialog() {
+            let tempYear = state.year;
+            yearLabel.textContent = String(tempYear);
+            const ptMonths = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+            function draw() {
+                monthGrid.innerHTML = '';
+                ptMonths.forEach((mName, idx) => {
+                    const b = document.createElement('button');
+                    b.className = 'month-btn';
+                    b.textContent = mName;
+                    b.setAttribute('data-month', idx);
+                    b.addEventListener('click', () => {
+                        state.current = new Date(tempYear, idx, 1);
+                        monthDlg.close();
+                        render();
+                        syncMonthInput(state.current);
+                        monthInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+                    monthGrid.appendChild(b);
+                });
+            }
+
+            prevYear.onclick = () => { tempYear--; yearLabel.textContent = String(tempYear); };
+            nextYear.onclick = () => { tempYear++; yearLabel.textContent = String(tempYear); };
+            todayBtn.onclick = () => { tempYear = new Date().getFullYear(); state.current = new Date(); render(); monthDlg.close(); };
+            cancelMonthBtn.onclick = closeMonthDlg.onclick = () => monthDlg.close();
+
+            draw();
+            monthDlg.showModal();
+        }
+
+        // ===== Listeners =====
+        pickMonthBtn.addEventListener('click', openMonthPickerSafely);
+        monthInput.addEventListener('change', (e) => {
+            const [y, m] = (e.target.value || '').split('-').map(Number);
+            if (!isNaN(y) && !isNaN(m)) {
+                state.current = new Date(y, m - 1, 1);
+                render();
+            }
+        });
+        closeModal.addEventListener('click', () => modal.close());
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+        modal.addEventListener('close', () => { // sempre volta para a view de detalhe vazia
+            pickListView.innerHTML = '';
+            showDetailView();
+            mTitle.textContent = 'Detalhes do evento';
+            mEvent.textContent = mClient.textContent = mStart.textContent = mDur.textContent = mPlace.textContent = '—';
+        });
+
+        // ===== Inicialização =====
+        render();
+
+        // ===== Testes (simples, rodam no console) =====
+        (function runTests() {
+            const results = [];
+            const t = (name, fn) => { try { fn(); results.push({ name, ok: true }); } catch (err) { console.error('Teste falhou:', name, err); results.push({ name, ok: false, err: String(err) }); } };
+
+            // Teste 1: duração 150min => 02:30 h
+            t('formatDuration 150 => 02:30 h', () => { if (formatDuration(150) !== '02:30 h') throw new Error(formatDuration(150)); });
+
+            // Teste 2: eventos em Outubro/2025 => 5 itens
+            t('eventsForMonth(2025,9) tem 5', () => { const list = eventsForMonth(2025, 9); if (list.length !== 5) throw new Error('len=' + list.length); });
+
+            // Teste 3: dia 25/10/2025 deve ter 2 eventos em ordem por horário
+            t('eventsForDate(25/10/2025) em ordem e com 2 itens', () => {
+                const list = eventsForDate(new Date(2025, 9, 25));
+                if (list.length !== 2) throw new Error('len=' + list.length);
+                const times = list.map(e => new Date(e.start).getTime());
+                if (!(times[0] < times[1])) throw new Error('ordem incorreta');
+            });
+
+            // Teste 4: matriz do mês alinha as semanas múltiplas de 7
+            t('getMonthMatrix retorna múltiplo de 7', () => { const cells = getMonthMatrix(2025, 9); if (cells.length % 7 !== 0) throw new Error('len=' + cells.length); });
+
+            // Teste 5: alternar multi->single mantém view correta
+            t('pickList->detail alterna corretamente', () => {
+                const day = new Date(2025, 9, 25); // dia com 2 eventos
+                const list = eventsForDate(day);
+                openPickListModal(day, list);
+                if (pickListView.hidden !== false || detailView.hidden !== true) throw new Error('pickList não exibida');
+                openEventModal(list[0]);
+                if (detailView.hidden !== false || pickListView.hidden !== true) throw new Error('detail não exibido');
+                // e o nome do evento deve aparecer tanto no título quanto no campo "Evento"
+                if (mTitle.textContent !== list[0].title) throw new Error('titulo não atualizado');
+                if (mEvent.textContent !== list[0].title) throw new Error('mEvent não atualizado');
+                modal.close();
+            });
+
+            const ok = results.every(r => r.ok);
+            console.log('%cTeste da Agenda — ' + (ok ? 'OK ✅' : 'Falhou ❌'), 'padding:6px 10px;border-radius:8px;background:' + (ok ? '#063' : '#630') + ';color:white');
+            if (!ok) console.table(results);
+        })();
+    </script>
+</body>
+
+</html>
