@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Wandersson G.</title>
+    <title>Agenda Mascarado PRO</title>
 
     <style>
         :root {
@@ -718,12 +718,59 @@
             }
 
             .calendar {
-                overflow-x: auto;
+                overflow: hidden;
+                padding: 8px;
             }
 
-            .weekdays,
+            .weekdays {
+                font-size: 11px;
+                gap: 4px;
+            }
+
             .calendar-grid {
-                min-width: 760px;
+                min-width: 100%;
+                gap: 4px;
+            }
+
+            .day {
+                min-height: 70px;
+                padding: 4px;
+                border-radius: 10px;
+            }
+
+            .day-number {
+                font-size: 12px;
+                margin-bottom: 2px;
+            }
+
+            .day-number span {
+                display: none;
+            }
+
+            .mini-event {
+                padding: 3px;
+                margin-top: 3px;
+                border-left-width: 3px;
+            }
+
+            .mini-event strong {
+                display: none;
+            }
+
+            .mini-event small {
+                display: block;
+                font-size: 9px;
+                text-align: center;
+            }
+
+            .month-control {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .month-label {
+                min-width: auto;
+                font-size: 14px;
             }
 
             .money-row {
@@ -781,7 +828,7 @@
             <div class="brand">
                 <div class="logo">🎭</div>
                 <div>
-                    <h1>Agenda Mascarado PRO</h1>
+                    <h1>Agenda Wandersson G.</h1>
                     <p>Controle de eventos, pagamentos, custos e lucro mensal para fotografia.</p>
                 </div>
             </div>
