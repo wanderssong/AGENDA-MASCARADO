@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Mascarado PRO</title>
+    <title>Agenda Wandersson G.</title>
 
     <style>
         :root {
@@ -624,11 +624,37 @@
             margin: 0;
         }
 
+
         .modal-body {
             padding: 18px;
             display: grid;
             gap: 12px;
+            max-height: calc(90vh - 90px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
+
+        dialog {
+            max-height: 90vh;
+        }
+
+        @media (max-width:640px) {
+            dialog {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .modal-body {
+                max-height: calc(100vh - 80px);
+                overflow-y: auto;
+                padding-bottom: 40px;
+            }
+        }
+
 
         .detail-row {
             display: flex;
@@ -1517,6 +1543,9 @@
             `;
 
             detailModal.showModal();
+            setTimeout(() => {
+                modalBody.scrollTop = 0;
+            }, 50);
         }
 
         function closeModal() {
